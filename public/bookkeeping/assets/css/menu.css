@@ -1,0 +1,140 @@
+/* Sidebar Navigation */
+.visible-phone {
+    display: none!important;
+}
+#sidebar > ul > li {
+  border-top: 1px solid #FFF; 
+  border-bottom: 1px solid #DDD;
+}
+#sidebar > ul > li.active {
+    background-color: #048ABF; 
+    border-bottom: 1px solid #7CB4DB;  
+    border-top: 1px solid #7CB4DB;
+}
+#sidebar > ul > li.active a{ 
+  color:#fff; text-decoration:none;
+}
+
+#sidebar > ul > li > a > .label {
+  background-color:#F66;
+  color: #FFF;
+    position: relative;
+    top: 3px;
+}
+
+#sidebar > ul > li.active > a > .label {
+  background-color:#FFF;
+  color: #F66;
+    position: relative;
+    top: 3px;
+}
+#sidebar > ul > li > a:hover {
+  background-color: #7CB4DB; color:#fff;
+}
+#sidebar > ul li ul {
+  background-color: #FFF;
+}
+#sidebar > ul li ul li a{ color:#939da8}
+#sidebar > ul li ul li a:hover, #sidebar > ul li ul li.active a {
+  color: #fff;
+  background-color: #13b5b1;
+}
+
+#sidebar {
+  display: block;
+  float: left;
+  position: fixed;
+  width: 220px;
+  z-index: 16;
+  top: 43px;
+  height: 100%;
+  background: #F2F2F2;
+
+}
+#sidebar > ul {
+  list-style: none;
+  margin: 0px 0 0;
+  padding: 0;
+  position: absolute;
+  width: 220px;
+  background: #F2F2F2;
+  border-top: #ddd 8px solid;
+}
+#sidebar > ul > li {
+  display: block;
+  position: relative;
+}
+#sidebar > ul > li > a {
+  padding: 10px 0 10px 15px;
+  display: block;
+  color: #666;
+  font-size: 0.9em;
+}
+#sidebar > ul > li > a > i {
+  margin-right: 10px;
+  margin-left: 10px;
+  font-size: 12px;
+}
+#sidebar > ul > li.active > a {
+  text-decoration:none;
+}
+#sidebar > ul > li > a > .label {
+  margin: 0 20px 0 0;
+  float: right;
+  padding: 3px 5px 2px;
+}
+#sidebar > ul > li.open.submenu > a {
+  
+}
+#sidebar > ul li ul {
+  display: none;
+  margin: 0;
+  padding: 0;
+}
+#sidebar > ul li.open ul {
+  display: block;
+  background: #fbfbfb;
+}
+
+#sidebar > ul li.open ul li{
+  border-top: #f2f2f2 1px solid;
+  border-bottom: #f9f9ff 1px solid;
+}
+
+#sidebar > ul li.open ul a{
+  color: #048ABF;
+  padding: 10px 0 10px 55px;
+  font-size: 0.9em;
+}
+#sidebar > ul li ul li a {
+  padding: 10px 0 10px 25px;
+  display: block;
+  color: #777777;
+}
+#sidebar > ul li ul li:first-child a {
+  border-top: 0;
+}
+#sidebar > ul li ul li:last-child a {
+  border-bottom: 0;
+}
+
+.label-important{ background: #fe6672;}
+
+.checkAccount{
+	width:100%;
+	height:500px;
+	position:absolute;
+	z-index:99;
+	background-color: rgba(0,0,0,0.5);
+	text-align:center;
+	line-height:300px;
+	color:#FFFFFF;
+	font-size: 20px;
+	display:none;
+}
+
+@media only screen and (max-width: 768px) {
+  #sidebar{
+    display: none;
+  }
+}

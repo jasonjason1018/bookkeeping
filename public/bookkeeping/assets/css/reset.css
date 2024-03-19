@@ -1,0 +1,311 @@
+@import url(https://fonts.googleapis.com/earlyaccess/cwtexyen.css);
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+html, body {
+    height: 100%;
+    font-family: '微軟正黑體', 'cwTeXYen', sans-serif;
+}
+
+* {
+    outline: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    line-height: 1;
+}
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+
+a {
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    text-decoration: none;
+}
+
+ins {
+    background-color: #ff9;
+    color: #000;
+    text-decoration: none;
+}
+
+mark {
+    background-color: #ff9;
+    color: #000;
+    font-style: italic;
+    font-weight: bold;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+abbr[title], dfn[title] {
+    border-bottom: 1px dotted;
+    cursor: help;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #cccccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+input, select {
+    vertical-align: middle;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+}
+
+::-webkit-search-cancel-button {
+    display: none;
+}
+
+.clearfix:after {   
+    content: ".";   
+    display: block; 
+    height: 0;  
+    visibility: hidden; 
+    clear: both;
+}
+/* IE pretty stick*/
+* html .clearfix {  
+    height: 1%;
+} /* IE6 */
+*:first-child+html .clearfix { 
+    min-height: 1px;
+} /* IE7 */
+
+.text-center{
+	text-align:center;
+}
+
+.button {
+    cursor: pointer;
+    -webkit-appearance: none;
+    font-size: 13px;
+    color: white;
+    text-decoration: none;
+    width: auto;
+    text-align: center;
+    line-height: 1.6;
+    height: auto;
+    border: none;
+    background: #dd0000;
+    padding: 0 .9em;
+    margin: 0;
+    font-family: '微軟正黑體';
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: inline-block;
+    vertical-align: middle;
+    zoom: 1;
+    -webkit-transition: 0.6s;
+    -moz-transition: 0.6s;
+    -o-transition: 0.6s;
+    -ms-transition: 0.6s;
+    transition: 0.6s;
+}
+.button:hover {
+    color: white;
+    text-decoration: none;
+    background: #f70000;
+    -webkit-transition: 0.6s;
+    -moz-transition: 0.6s;
+    -o-transition: 0.6s;
+    -ms-transition: 0.6s;
+    transition: 0.6s;
+}
+.button.disabled, .button[disabled] {
+    cursor: default;
+    color: #cccccc;
+    background: transparent;
+}
+.button.disabled:active, .button.disabled.pressed, .button[disabled]:active, .button[disabled].pressed {
+    background: transparent;
+}
+.button[type=reset], .button[type=button], .button[type=submit] {
+    font-family: inherit;
+    border: 0 none;
+    margin: 0;
+}
+.button:active, .button.pressed {
+    background: #910000;
+}
+.button.large {
+    font-size: 15px;
+    padding: .37em 1.9em;
+    height: auto;
+    line-height: 1.4;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.button.full {
+    width: 100%;
+}
+.button.gray {
+    background: #6c6c6c;
+    color: white;
+}
+.button.gray:hover {
+    background: #797979;
+}
+.button.gray:active, .button.gray.pressed {
+    background: #464646;
+}
+.button.lighten-blue {
+    background: #7fbee5;
+    color: white;
+}
+.button.lighten-blue:hover {
+    background: #94c9e9;
+}
+.button.lighten-blue:active, .button.lighten-blue.pressed {
+    background: #3f9ed8;
+}
+.button.light-blue {
+    background: #2290c6;
+    color: white;
+}
+.button.light-blue:hover {
+    background: #289fda;
+}
+.button.light-blue:active, .button.light-blue.pressed {
+    background: #176185;
+}
+.button.btn-rush, .button .btn-addcart, .button .btn-add {
+    background: #2290c6;
+    color: white;
+}
+.button.btn-rush:hover, .button .btn-addcart:hover, .button .btn-add:hover {
+    background: #289fda;
+}
+.button.btn-rush:active, .button.btn-rush.pressed, .button .btn-addcart:active, .button .btn-addcart.pressed, .button .btn-add:active, .button .btn-add.pressed {
+    background: #176185;
+}
+.button.btn-discount, .button.red {
+    background: #dd0000;
+}
+.button.btn-discount:hover, .button.red:hover {
+    background: #f70000;
+}
+.button.btn-discount:active, .button.btn-discount.pressed, .button.red:active, .button.red.pressed {
+    background: #910000;
+}
+.button.btn-preorder, .button.yellow {
+    background: #ffcc21;
+    color: white;
+}
+.button.btn-preorder:hover, .button.yellow:hover {
+    background: #ffd23b;
+}
+.button.btn-preorder:active, .button.btn-preorder.pressed, .button.yellow:active, .button.yellow.pressed {
+    background: #d3a300;
+}
+.button.gray {
+    background: #6c6c6c;
+    color: white;
+}
+.button.gray:hover {
+    background: #797979;
+}
+.button.gray:active, .button.gray.pressed {
+    background: #464646;
+}
+.button.btn-preorder-finish, .button.btn-rush-finish, .button.btn-soldout-stock, .button.btn-soldout, .button.btn-to-sale {
+    padding: 0;
+    color: gray;
+    font-weight: 700;
+    cursor: default;
+    background: transparent;
+}
+.button.btn-preorder-finish:hover, .button.btn-preorder-finish:active, .button.btn-preorder-finish.pressed, .button.btn-rush-finish:hover, .button.btn-rush-finish:active, .button.btn-rush-finish.pressed, .button.btn-soldout-stock:hover, .button.btn-soldout-stock:active, .button.btn-soldout-stock.pressed, .button.btn-soldout:hover, .button.btn-soldout:active, .button.btn-soldout.pressed, .button.btn-to-sale:hover, .button.btn-to-sale:active, .button.btn-to-sale.pressed {
+    background: transparent;
+}
+.button.btn-to-sale {
+    color: #ff9900;
+}
+.button.btn-checkout {
+    background: #ff9900;
+}
+
+.icon i {
+    display: inline-block;
+    padding-left: 24px;
+    line-height: 1.2;
+}
+.icon i:before {
+    font-size: 17px;
+    margin-right: 10px;
+    margin-left: -24px;
+    vertical-align: 2px !important;
+}
+.fa-line-square {
+    background: url('../../../img/icon_line.png') no-repeat center;
+    width: 24px;
+    height: 24px;
+    background-size: 100%;
+    position: relative;
+    top: 2px;
+}
+.fa-line-square:hover{
+  
+}
+.fa-facebook-square{
+    position: relative;
+    top: 1px;
+}
