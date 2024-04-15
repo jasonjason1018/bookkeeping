@@ -12,6 +12,8 @@ use App\Models\AdminUser;
 use App\Models\AccountDetail;
 use App\Models\LedgerEntry;
 use App\Models\ShareDetail;
+use App\Models\CategoryType;
+use App\Models\Subject;
 
 class Controller extends BaseController
 {
@@ -24,17 +26,23 @@ class Controller extends BaseController
     protected $accountDetails;
     protected $ledgerEntry;
     protected $shareDetail;
+    protected $categoryType;
+    protected $company_id;
+    protected $subject;
     
     public function __construct(request $request){
         $uri = explode('/', request()->path());
         $this->path = $uri[0] == ''?request()->path():$uri[0];
         $this->post = $request->input();
         $this->get = $request->query();
+        // $this->company_id = $request->session()->get($request->cookie('admin_token').'_user_info')['company_id']??'';
         $this->request = $request;
         $this->adminUsers = new AdminUser();
         $this->accountDetails = new AccountDetail();
         $this->ledgerEntry = new LedgerEntry();
         $this->shareDetail = new ShareDetail();
+        $this->categoryType = new CategoryType();
+        $this->subject = new Subject();
     }
 
     protected function view($param = false){

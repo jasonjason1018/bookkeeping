@@ -3,48 +3,44 @@
 <div id="content">
     <div class="outstanding_page">
         <div class="title_txt">
-            <center> 資料管理 </center>
+            <center> 應收帳款 </center>
         </div>
     </div>
     <div class="center manager_tab_all_block">
+        <el-select v-model="year" @change="getAccountList">
+            <el-option
+                v-for="item in yearOption"
+                :key="item.value"
+                :label="item.value"
+                :value="item.value"
+            >
+            </el-option>
+        </el-select>
         <p>&nbsp;</p>
         <div class="form-container">
             <el-table :data="form" border>
-                <el-table-column label="編號" prop="id" style="width:100%"></el-table-column>
-                <el-table-column label="收/支" prop="type" style="width:100%"></el-table-column>
-                <el-table-column label="發票日期" prop="invoice_date" style="width:100%"></el-table-column>
                 <el-table-column label="內容" prop="content" style="width:100%"></el-table-column>
-                <el-table-column label="金額/稅額/進項" style="width:100%">
+                <el-table-column label="發票編號" prop="invoice_number" style="width:100%"></el-table-column>
+                <el-table-column label="應收帳款" style="width:100%">
                     <template #default="scope">
                         金額:@{{ scope.row.price }}<br>
                         稅額:@{{ scope.row.tax }}<br>
                         進項:@{{ scope.row.untax }}
                     </template>
                 </el-table-column>
-                <el-table-column label="發票號碼/類型" prop="invoice_type" style="width:100%"></el-table-column>
-                <el-table-column label="是否攤分" style="width:100%">
+                <el-table-column label="發票日期" prop="invoice_date" style="width:100%"></el-table-column>
+                <el-table-column label="實際收款金額" style="width:100%">
                     <template #default="scope">
-                        <span v-if="scope.row.share == 1">
-                            是
+                        <span v-if="scope.row.actual_amount == 0">
+                            未收款
                         </span>
                         <span v-else>
-                            否
+                            @{{ scope.row.actual_amount }}
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column label="攤分起始/結束日期" style="width:100%">
-                    <template #default="scope">
-                        起始:@{{ scope.row.start_share_date??'-' }} <hr> 結束:@{{ scope.row.end_share_date??'-' }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="實際收/支日期" prop="actual_date" style="width:100%"></el-table-column>
-                <el-table-column>
-                    <template #default="scope">
-                        <center><el-button size="small" type="success" @click="handleDetail(scope.row.id)">詳細</el-button><br></center>
-                        <center><el-button size="small" type="primary" @click="handleEdit(scope.row.id)">編輯</el-button><br></center>
-                        <center><el-button size="small" type="danger" @click="dataDelete(scope.row.id)">刪除</el-button></center>
-                    </template>
-                </el-table-column>
+                <el-table-column label="實際收款日期" prop="actual_date" style="width:100%"></el-table-column>
+                <el-table-column label="備注" prop="remark" style="width:100%"></el-table-column>
             </el-table>
             <el-dialog v-model="centerDialogVisible" :title="確認刪除" align-center>
                     <center>刪除後將無法恢復，確定刪除?</center>
@@ -72,9 +68,8 @@
             const form = ref();
             const dialog = ref({});
             const getAccountList = () => {
-                axios.post('/getAccountList')
+                axios.post('/getAccountListIncome', {year:year.value})
                 .then((res) => {
-                    console.log(res.data);
                     form.value = res.data;
                 })
             }
@@ -102,7 +97,19 @@
                 })
             }
 
+            const year = ref();
+            const yearOption = ref([]);
+
+            const setOption = () => {
+                var date = new Date();
+                year.value = date.getFullYear()
+                for(i=1911;i<=year.value;i++){
+                    yearOption.value.push({label:i, value:i});
+                }
+            }
+
             onMounted(() => {
+                setOption();
                 getAccountList();
             })
 
@@ -113,6 +120,9 @@
                 handleDelete,
                 centerDialogVisible,
                 dataDelete,
+                getAccountList,
+                year,
+                yearOption,
             }
         }
     }).use(ElementPlus).mount('#content')

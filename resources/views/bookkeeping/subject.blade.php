@@ -3,23 +3,22 @@
 <div id="content">
     <div class="outstanding_page">
         <div class="title_txt">
-            <center> 新增歸帳項目 </center>
+            <center> 科目設定 </center>
         </div>
     </div>
     <div class="center manager_tab_all_block">
+        <el-button type="primary" @click="prev">上一頁</el-button>
         <p>&nbsp;</p>
         <div class="form-container">
             <el-table :data="table_data" border>
                 <el-table-column prop="id" label="編號" style="width:100%"></el-table-column>
-                <el-table-column prop="item" label="名稱" style="width:100%"></el-table-column>
-                <el-table-column prop="create_at" label="新增日期" style="width:100%"></el-table-column>
-                <el-table-column prop="update_at" label="最後編輯日期" style="width:100%"></el-table-column>
+                <el-table-column prop="code" label="科目" style="width:100%"></el-table-column>
+                <el-table-column prop="name" label="名稱" style="width:100%"></el-table-column>
                 <el-table-column style="width:100%">
                     <template #header>
                         <el-button type="success" @click="handleEdit(0)">新增</el-button>
                     </template>
                     <template #default="scope">
-                        <el-button type="primary" @click="handleSubject(`${scope.row.id}`)">科目</el-button>
                         <el-button type="primary" @click="handleEdit(`${scope.row.id}`)">編輯</el-button>
                         <el-button type="danger" @click="handleDeleteDialog(`${scope.row.id}`)">刪除</el-button>
                     </template>
@@ -32,8 +31,11 @@
             <el-dialog v-model="centerDialogVisible" :title="dialog.title" align-center>
                 <span v-if="dialog.type != 'delete'">
                     <el-form>
+                        <el-form-item label="代號">
+                            <el-input v-model="dialog.code"></el-input>
+                        </el-form-item>
                         <el-form-item label="項目名稱">
-                            <el-input v-model="dialog.item"></el-input>
+                            <el-input v-model="dialog.name"></el-input>
                         </el-form-item>
                     </el-form>
                 </span>
@@ -43,7 +45,7 @@
                 <template #footer>
                     <span class="dialog-footer" v-if="dialog.type != 'delete'">
                         <el-button @click="centerDialogVisible = false">關閉</el-button>
-                        <el-button type="primary" @click="handleSend" :disabled="!dialog.item">
+                        <el-button type="primary" @click="handleSend" :disabled="!dialog.name || !dialog.code">
                             送出
                         </el-button>
                     </span>
@@ -60,6 +62,7 @@
     <p>&nbsp;</p>
 </div>
 <script>
+    const ledger_id = "{{ $param }}";
     const {
         createApp,
         ref,
@@ -98,10 +101,10 @@
 
             const handleSend = () => {
                 console.log(dialog.value);
-                axios.post('/saveLedgerEntry', dialog.value)
+                axios.post('/saveSubject', dialog.value)
                     .then((res) => {
                         centerDialogVisible.value = false;
-                        getLedgerEntryList();
+                        getSubject();
                     });
             }
 
@@ -114,10 +117,10 @@
             }
 
             const handleDelete = () => {
-                axios.post('/ledgerEntryDelete', dialog.value)
+                axios.post('/subjectDelete', dialog.value)
                     .then((res) => {
                         centerDialogVisible.value = false;
-                        getLedgerEntryList();
+                        getSubject();
                     })
             }
 
@@ -125,16 +128,18 @@
                 dialog.value = {};
                 centerDialogVisible.value = true
                 dialog.value.title = "新增歸帳項目";
+                dialog.value.ledger_id = ledger_id;
                 if (id) {
                     const data = form.value.filter(row => row.id == id);
-                    dialog.value.item = data[0].item;
                     dialog.value.id = data[0].id;
+                    dialog.value.name = data[0].name;
+                    dialog.value.code = data[0].code;
                     dialog.value.title = "編輯歸帳項目";
                 }
             }
 
-            const getLedgerEntryList = () => {
-                axios.post('/getLedgerEntryList')
+            const getSubject = () => {
+                axios.post('/getSubject', {id: ledger_id})
                     .then((res) => {
                         form.value = res.data;
                     })
@@ -143,12 +148,12 @@
                     })
             }
 
-            const handleSubject = (id) => {
-                window.location.href=`/subject/${ id }`;
+            const prev = () => {
+                window.history.back();
             }
 
             onMounted(() => {
-                getLedgerEntryList();
+                getSubject();
             })
 
             return {
@@ -162,7 +167,7 @@
                 handleEdit,
                 handleDelete,
                 handleDeleteDialog,
-                handleSubject,
+                prev,
             }
         },
     }).use(ElementPlus).mount('#content')

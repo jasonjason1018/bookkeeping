@@ -50,7 +50,7 @@
                     </template>
                 </el-descriptions-item>
                 <el-descriptions-item label="歸帳項目">
-                    <el-tag style="margin-right: 5px" size="small" v-for="(v, k) in form.account_type" :key="k">@{{ v }}</el-tag>
+                    <el-tag>@{{ form.account_type_name }} - @{{ form.subject }}</el-tag>
                 </el-descriptions-item>
             </el-descriptions>
         </div>
@@ -72,7 +72,6 @@
                 axios.post('/getAccountData', {id: id})
                 .then((res) => {
                     res.data.img = JSON.parse(res.data.img);
-                    res.data.account_type = JSON.parse(res.data.account_type);
                     form.value = res.data;
                 })
             }

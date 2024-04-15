@@ -19,26 +19,42 @@
                         <el-button type="primary" @click="handlePrev">上一頁</el-button>
                 </el-form-item>
                 <el-form-item label="收入/支出">
-                    <el-select v-model="form.type">
+                    <el-select v-model="form.type" @change="changeType">
                         <el-option
                             v-for="item in type"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value"
+                            :value="item.label"
                         >
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="發票日期" prop="invoice_date">
-                    <el-date-picker
-                        style="width: 100%;"
-                        v-model="form.invoice_date"
-                        type="date"
-                        placeholder="選擇日期"
-                        format="YYYY-MM-DD"
-                        value-format="YYYY-MM-DD"
-                    >
+                <el-form-item label="收/支類別" prop="category_type">
+                    <el-select v-model="form.category_type">
+                        <el-option
+                            v-for="item in category_type"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.name"
+                        >
+                        </el-option>
+                    </el-select>
                 </el-form-item>
+                <div v-if="form.invoice_type != '其他收據'">
+                    <el-form-item label="發票編號" prop="invoice_number">
+                        <el-input placeholder="ex.AA12345678" v-model="form.invoice_number">
+                    </el-form-item>
+                    <el-form-item label="發票日期" prop="invoice_date">
+                        <el-date-picker
+                            style="width: 100%;"
+                            v-model="form.invoice_date"
+                            type="date"
+                            placeholder="選擇日期"
+                            format="YYYY-MM-DD"
+                            value-format="YYYY-MM-DD"
+                        >
+                    </el-form-item>
+                </div>
                 <el-form-item label="發票類型">
                     <el-select v-model="form.invoice_type" @change="calculation(form.price)">
                         <el-option
@@ -52,6 +68,10 @@
                 </el-form-item>
                 <el-form-item label="內容">
                     <el-input type="textarea" v-model="form.content">
+                </el-form-item>
+                <el-form-item label="計算稅額" v-if="form.invoice_type == '其他收據'">
+                    <el-checkbox v-model="is_count" @click="handleInput(form.price)">
+                    </el-checkbox>
                 </el-form-item>
                 <el-form-item label="金額" prop="price">
                     <el-input
@@ -76,6 +96,13 @@
                         placeholder="選擇日期"
                         format="YYYY-MM-DD"
                         value-format="YYYY-MM-DD"
+                    >
+                </el-form-item>
+                <el-form-item :label="actual_amount_label" >
+                    <el-input
+                    :formatter="(value) => value.replace(/[^0-9.,]/g, '')"
+                    v-model="form.actual_amount"
+                    style="width:100%"
                     >
                 </el-form-item>
                 <el-form-item label="備註">
@@ -127,14 +154,27 @@
                 <el-form-item label="歸帳項目" prop="account_type">
                     <el-select
                         v-model="form.account_type"
-                        multiple
                         placeholder="請選擇"
+                        @change="getSubject"
                     >
                         <el-option
                             v-for="item in account_type_options"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="歸帳科目" prop="subject" v-if="form.account_type">
+                    <el-select
+                        v-model="form.subject"
+                        placeholder="請選擇"
+                    >
+                        <el-option
+                            v-for="item in subject"
+                            :key="item.value"
+                            :label="item.name"
+                            :value="item.name"
                         ></el-option>
                     </el-select>
                 </el-form-item>
@@ -156,8 +196,17 @@
         } = Vue;
         createApp({
             setup() {
+                const is_count = ref(false);
                 const ruleFormRef = ref();
+                const actual_amount_label = ref('實際收入金額');
                 const rules = {
+                    category_type: [
+                        {required:true, message:'請選擇至收/支類別', trigger: 'change'},
+                    ],
+                    invoice_number:[
+                        {required:true, message:'請填寫發票號碼', trigger: 'blur'},
+                        { pattern: /^[a-zA-Z]{2}[0-9]{8}$/, message: '發票編號格式不正確', trigger: 'blur' },
+                    ],
                     invoice_date:[
                         {required:true, message:'請選擇發票日期', trigger: 'change'}
                     ],
@@ -176,27 +225,28 @@
                     account_type: [
                         {required:true, message:'請選擇至少一個歸帳項目', trigger: 'change'}
                     ],
+                    subject: [
+                        {required:true, message:'請選擇至少一個歸帳科目', trigger: 'change'}
+                    ],
                 };
 
                 const account_type_options = ref([]);
 
                 const type = ref({
-                    0:{value: '0', label:'公司收入'},
-                    1:{value: '1', label:'公司支出'},
-                    2:{value: '2', label:'零用金收入'},
-                    3:{value: '3', label:'零用金支出'},
+                    0:{value: '0', label:'收入'},
+                    1:{value: '1', label:'支出'},
                 });
 
                 const invoice_type = ref({
                     0:{value: '三聯發票'},
-                    1:{value: '其他收據'},
-                    2:{value: '二聯發票'},
+                    1:{value: '二聯發票'},
+                    2:{value: '其他收據'},
                 });
 
                 const form = ref({
-                    type:'公司收入',
+                    type:'支出',
                     invoice_type: '三聯發票',
-                    account_type: [],
+                    share: '0',
                     content: '',
                     remark: '',
                 });
@@ -212,11 +262,15 @@
                     if(thisValue != '' && thisValue != undefined){
                         form.value.tax = 0;
                         form.value.untax = thisValue;
-                        if(form.value.invoice_type == '三聯發票'){
-                            form.value.untax = Math.round(thisValue/1.05);
-                            form.value.tax = thisValue - form.value.untax;
+                        if(form.value.invoice_type != '其他收據' || is_count.value == true){
+                            countTax(thisValue);
                         }
                     }
+                }
+
+                const countTax = (thisValue) => {
+                    form.value.untax = Math.round(thisValue/1.05);
+                    form.value.tax = thisValue - form.value.untax;
                 }
                 const imgList = ref([]);
                 const send = (formRef) => {
@@ -229,7 +283,6 @@
 
                 const uploadImg = () => {
                     if(form.value.img != undefined && form.value.img.length > 0){
-                        console.log('123');
                         form.value.img.forEach((row, key) =>{
                             if(row.raw != ''){
                                 const formData = new FormData();
@@ -252,12 +305,14 @@
                                 });
                             }else{
                                 imgList.value.push(row);
+                                if(key == form.value.img.length-1){
+                                    sendFormData();
+                                }
                             }
                         });
                     }else{
                         sendFormData(); 
                     }
-                    // sendFormData();
                 }
 
                 const sendFormData = () => {
@@ -281,7 +336,7 @@
                     axios.post('/getledgerEntryList')
                     .then((res) => {
                         res.data.forEach((v, k) => {
-                            account_type_options.value.push({label: v.item, value: v.item});
+                            account_type_options.value.push({label: v.item, value: v.id});
                         });
                     })
                 }
@@ -300,8 +355,39 @@
                     window.history.back();
                 }
 
+                const getCompanyId = () => {
+                    axios.post('/getCompanyId')
+                    .then((res) => {
+                        form.value.company_id = res.data;
+                    })
+                }
+
+                const category_type = ref();
+
+                const getCategoryType = () => {
+                    axios.post('/getCategoryType')
+                    .then((res) => {
+                        category_type.value = res.data;
+                    })
+                }
+
+                const changeType = (value) => {
+                    actual_amount_label.value = value == '支出'?'匯費':'實際收入金額';
+                }
+                const subject = ref();
+                const getSubject = () => {
+                    form.value.subject = '';
+                    axios.post('/getSubject', {id: form.value.account_type})
+                        .then((res) => {
+                            subject.value = res.data;
+                        })
+                }
+
                 onMounted(() => {
                     getledgerEntryList();
+                    getCompanyId();
+                    getCategoryType();
+                    // getSubject();
                     if(id){
                         getAccountData();
                     }
@@ -320,6 +406,12 @@
                     ruleFormRef,
                     id,
                     handlePrev,
+                    category_type,
+                    is_count,
+                    actual_amount_label,
+                    changeType,
+                    getSubject,
+                    subject,
                 }
             },
         }).use(ElementPlus).mount('#content')

@@ -3,7 +3,7 @@
 <div id="content">
     <div class="outstanding_page">
         <div class="title_txt">
-            <center> 新增歸帳項目 </center>
+            <center> 收支類別設定 </center>
         </div>
     </div>
     <div class="center manager_tab_all_block">
@@ -11,29 +11,24 @@
         <div class="form-container">
             <el-table :data="table_data" border>
                 <el-table-column prop="id" label="編號" style="width:100%"></el-table-column>
-                <el-table-column prop="item" label="名稱" style="width:100%"></el-table-column>
-                <el-table-column prop="create_at" label="新增日期" style="width:100%"></el-table-column>
-                <el-table-column prop="update_at" label="最後編輯日期" style="width:100%"></el-table-column>
+                <el-table-column prop="name" label="名稱" style="width:100%"></el-table-column>
+                <el-table-column prop="created_at" label="新增日期" style="width:100%"></el-table-column>
+                <el-table-column prop="updated_at" label="最後編輯日期" style="width:100%"></el-table-column>
                 <el-table-column style="width:100%">
                     <template #header>
                         <el-button type="success" @click="handleEdit(0)">新增</el-button>
                     </template>
                     <template #default="scope">
-                        <el-button type="primary" @click="handleSubject(`${scope.row.id}`)">科目</el-button>
                         <el-button type="primary" @click="handleEdit(`${scope.row.id}`)">編輯</el-button>
                         <el-button type="danger" @click="handleDeleteDialog(`${scope.row.id}`)">刪除</el-button>
                     </template>
                 </el-table-column>
-                <template #append v-if="form.length > 10">
-                    <el-pagination :page-sizes="page_config.size" style="justify-content:center" layout=" prev, pager, next" :total="form.length" @change="handlePagination"></el-pagination>
-                </template>
             </el-table>
-            <p>&nbsp;</p>
             <el-dialog v-model="centerDialogVisible" :title="dialog.title" align-center>
                 <span v-if="dialog.type != 'delete'">
                     <el-form>
                         <el-form-item label="項目名稱">
-                            <el-input v-model="dialog.item"></el-input>
+                            <el-input v-model="dialog.name"></el-input>
                         </el-form-item>
                     </el-form>
                 </span>
@@ -43,7 +38,7 @@
                 <template #footer>
                     <span class="dialog-footer" v-if="dialog.type != 'delete'">
                         <el-button @click="centerDialogVisible = false">關閉</el-button>
-                        <el-button type="primary" @click="handleSend" :disabled="!dialog.item">
+                        <el-button type="primary" @click="handleSend" :disabled="!dialog.name">
                             送出
                         </el-button>
                     </span>
@@ -57,7 +52,6 @@
             </el-dialog>
         </div>
     </div>
-    <p>&nbsp;</p>
 </div>
 <script>
     const {
@@ -98,10 +92,10 @@
 
             const handleSend = () => {
                 console.log(dialog.value);
-                axios.post('/saveLedgerEntry', dialog.value)
+                axios.post('/saveCategoryType', dialog.value)
                     .then((res) => {
                         centerDialogVisible.value = false;
-                        getLedgerEntryList();
+                        getCategoryType();
                     });
             }
 
@@ -114,10 +108,10 @@
             }
 
             const handleDelete = () => {
-                axios.post('/ledgerEntryDelete', dialog.value)
+                axios.post('/categoryTypeDelete', dialog.value)
                     .then((res) => {
                         centerDialogVisible.value = false;
-                        getLedgerEntryList();
+                        getCategoryType();
                     })
             }
 
@@ -125,30 +119,41 @@
                 dialog.value = {};
                 centerDialogVisible.value = true
                 dialog.value.title = "新增歸帳項目";
+                dialog.value.company_id = company_id.value;
                 if (id) {
                     const data = form.value.filter(row => row.id == id);
-                    dialog.value.item = data[0].item;
+                    dialog.value.name = data[0].name;
                     dialog.value.id = data[0].id;
                     dialog.value.title = "編輯歸帳項目";
                 }
             }
 
-            const getLedgerEntryList = () => {
-                axios.post('/getLedgerEntryList')
-                    .then((res) => {
-                        form.value = res.data;
+            const getCategoryType = () => {
+                axios.post('/getCategoryType')
+                .then((res) => {
+                    res.data.map((row) => {
+                        row.created_at = row.created_at.split('T')[0];
+                        row.updated_at = row.updated_at.split('T')[0];
                     })
-                    .finally(() => {
-                        pagination();
-                    })
+                    form.value = res.data;
+                })
+                .finally(() => {
+                    pagination();
+                })
             }
 
-            const handleSubject = (id) => {
-                window.location.href=`/subject/${ id }`;
+            const company_id = ref();
+
+            const getCompanyId = () => {
+                axios.post('/getCompanyId')
+                .then((res) => {
+                    company_id.value = res.data;
+                })
             }
 
             onMounted(() => {
-                getLedgerEntryList();
+                getCompanyId();
+                getCategoryType();
             })
 
             return {
@@ -162,7 +167,6 @@
                 handleEdit,
                 handleDelete,
                 handleDeleteDialog,
-                handleSubject,
             }
         },
     }).use(ElementPlus).mount('#content')

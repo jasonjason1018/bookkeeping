@@ -15,9 +15,20 @@
                 <li><a data-ajax="false" href="" class="dropdown-toggle" data-toggle="dropdown">後台管理<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu" data-ajax="false">
                         <li><a data-ajax="false" href="/accountForm" style="color:black;">表單</a></li>
-                        <li><a data-ajax="false" href="/ledgerEntry" style="color:black;">新增歸帳項目</a></li>
+                        <li><a data-ajax="false" href="/categoryType" style="color:black;">收支類別設定</a></li>
+                        <li><a data-ajax="false" href="/ledgerEntry" style="color:black;">歸帳項目設定</a></li>
                         <li><a data-ajax="false" href="/accountList" style="color:black;">資料管理</a></li>
                         <li><a data-ajax="false" href="/logout" style="color:black;">登出</a></li>
+                    </ul>
+                </li>
+                <li><a data-ajax="false" href="" class="dropdown-toggle" data-toggle="dropdown">報表管理<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu" data-ajax="false">
+                        <li><a data-ajax="false" href="/reportIncome" style="color:black;">應收帳款</a></li>
+                        <li><a data-ajax="false" href="/reportRevenue" style="color:black;">營收分攤</a></li>
+                        <!-- <li><a data-ajax="false" href="/categoryType" style="color:black;">收支類別設定</a></li>
+                        <li><a data-ajax="false" href="/ledgerEntry" style="color:black;">歸帳項目設定</a></li>
+                        <li><a data-ajax="false" href="/accountList" style="color:black;">資料管理</a></li>
+                        <li><a data-ajax="false" href="/logout" style="color:black;">登出</a></li> -->
                     </ul>
                 </li>
                 <!-- <ul class="nav navbar-nav">

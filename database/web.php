@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookkeepingController;
 use App\Http\Controllers\OCRController;
-use App\Http\Controllers\QrcodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,10 +23,6 @@ Route::get('/demo', function () {
 Route::get('/qrcode', function () {
     return view('qrcode');
 });
-
-Route::get('/execGenerateQrcodeCommand', [QrcodeController::class, 'execGenerateQrcodeCommand']);
-Route::get('/getQrcodeSerialNumberList/{limit}', [QrcodeController::class, 'getQrcodeSerialNumberList']);
-
 Route::post('/extract-text', [OCRController::class, 'ocrImageProcess']);
 $uri = explode('/', request()->path());
 $path = $uri[0] == ''?request()->path():$uri[0];
