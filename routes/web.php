@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookkeepingController;
 use App\Http\Controllers\OCRController;
 use App\Http\Controllers\QrcodeController;
+use App\Http\Controllers\LineBotController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,11 @@ use App\Http\Controllers\QrcodeController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::prefix('/line')->group(function () {
+    Route::get('/getMessage', [LineBotController::class, 'getMessage']);
+    Route::post('/getMessage', [LineBotController::class, 'getMessage']);
+});
+
 
 Route::get('/demo', function () {
     // phpinfo();
