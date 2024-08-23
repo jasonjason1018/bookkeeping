@@ -10,12 +10,13 @@ class LineBotController extends Controller
 {
     public function getMessage(request $request)
     {
+        $get = $request->all();
         try {
-            Log::channel('daily')->info($request->query());
+            Log::channel('daily')->info($get);
         } catch (Exception $e) {
             Log::channel('daily')->error('錯誤');
         }
 
-        return 'hahaha';
+        return response()->json(['status' => 'success'], 200);
     }
 }

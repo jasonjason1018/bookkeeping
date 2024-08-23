@@ -18,6 +18,7 @@ use App\Http\Controllers\LineBotController;
 */
 Route::prefix('/line')->group(function () {
     Route::get('/getMessage', [LineBotController::class, 'getMessage']);
+    Route::post('/getMessage', [LineBotController::class, 'getMessage']);
 });
 
 
