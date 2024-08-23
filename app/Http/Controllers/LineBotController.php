@@ -8,14 +8,24 @@ use mysql_xdevapi\Exception;
 
 class LineBotController extends Controller
 {
-    public function getMessage(request $request)
+    public function getMessage(Request $request)
     {
-        try {
-            Log::channel('daily')->info($request->query());
-        } catch (Exception $e) {
-            Log::channel('daily')->error('錯誤');
+        // 檢查是否有 `validationToken`，這表示這是來自 Microsoft Graph 的驗證請求
+        if ($request->has('validationToken')) {
+            // 返回 `validationToken` 作為純文本
+            return response($request->input('validationToken'), 200)
+                ->header('Content-Type', 'text/plain');
         }
 
-        return 'hahaha';
+        // 如果不是驗證請求，處理來自 Graph 的通知
+        try {
+            $get = $request->all();
+            Log::channel('daily')->info($get);
+        } catch (Exception $e) {
+            Log::channel('daily')->error('錯誤: ' . $e->getMessage());
+        }
+
+        return response()->noContent(200);
     }
+
 }
